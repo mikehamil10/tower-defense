@@ -8,22 +8,27 @@ const ctx = canvas.getContext("2d")!;
 canvas.width = 1280;
 canvas.height = 768;
 
-ctx.fillStyle = "#fff";
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
 // Load backaground image
-const image = new Image();
-image.src = "assets/images/level.png";
+const levelImage = new Image();
+levelImage.src = "assets/images/level.png";
+levelImage.onload = () => tick();
 
-image.onload = () => animate();
+// Define Enemy array
+const enemies = new Array<Enemy>();
+for (let i = 0; i < 10; i++) {
+  const xOffset = i * 400;
+  enemies.push(
+    new Enemy(waypoints, { x: waypoints[0].x - xOffset, y: waypoints[0].y })
+  );
+}
 
-const enemy1 = new Enemy(waypoints, waypoints[0]);
+function tick() {
+  requestAnimationFrame(tick);
 
-function animate() {
-  requestAnimationFrame(animate);
+  ctx.drawImage(levelImage, 0, 0);
 
-  ctx.drawImage(image, 0, 0);
-
-  enemy1.update();
-  enemy1.draw(ctx);
+  enemies.forEach((enemy) => {
+    enemy.update();
+    enemy.draw(ctx);
+  });
 }
