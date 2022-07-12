@@ -1,3 +1,3 @@
 # tower-defense
 
-HTML5 tower defense game using <canvas>
+HTML5 tower defense game using `canvas`
