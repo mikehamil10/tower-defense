@@ -2,9 +2,12 @@ import { GameObject } from "../engine/GameObject";
 import { Vector2 } from "../engine/Vector2";
 
 export class PlacementTile extends GameObject {
-  color: string;
+  static Empty = new PlacementTile(new Vector2(-10000, -10000));
 
-  constructor(position: Vector2) {
+  color: string;
+  // occupied: boolean = false;
+
+  constructor(position: Vector2, public occupied: boolean = false) {
     super(position, new Vector2(64, 64));
     this.color = "rgba(255, 255, 255, 0.15)";
   }

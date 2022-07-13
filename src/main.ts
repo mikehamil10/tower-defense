@@ -1,6 +1,7 @@
 import { Vector2 } from "./engine/Vector2";
 import { Enemy } from "./GameObjects/Enemy";
 import { PlacementTile } from "./GameObjects/PlacementTile";
+import { Tower } from "./GameObjects/Tower";
 import { columns, placementTiles, waypoints } from "./level";
 import "./style.css";
 
@@ -20,6 +21,10 @@ const startGame = () =>
 const levelImage = new Image();
 levelImage.src = "assets/images/level.png";
 levelImage.onload = startGame;
+
+// Create Building array
+const buildings = new Array<Tower>();
+let activeTile = PlacementTile.Empty;
 
 // Create Enemy array
 const enemies = new Array<Enemy>();
@@ -43,12 +48,33 @@ placementTiles2D.forEach((row, yPos) => {
   });
 });
 
-// Set up mouse tracking
+// Set up mouse events
 const mouse: { x: number; y: number } = { x: 0, y: 0 };
-
 window.addEventListener("mousemove", (e: MouseEvent) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
+
+  activeTile = PlacementTile.Empty;
+  for (let i = 0; i < buildingLocations.length; i++) {
+    const tile = buildingLocations[i];
+
+    if (
+      mouse.x > tile.position.x &&
+      mouse.x < tile.position.x + tile.size.x &&
+      mouse.y > tile.position.y &&
+      mouse.y < tile.position.y + tile.size.y
+    ) {
+      activeTile = tile;
+      break;
+    }
+  }
+});
+
+canvas.addEventListener("mousedown", (_e: MouseEvent) => {
+  if (activeTile != PlacementTile.Empty && !activeTile.occupied) {
+    buildings.push(new Tower(activeTile.position));
+    activeTile.occupied = true;
+  }
 });
 
 // Main Game Loop
@@ -63,5 +89,10 @@ function tick() {
   enemies.forEach((enemy) => {
     enemy.update();
     enemy.draw(ctx);
+  });
+
+  buildings.forEach((b) => {
+    b.update({});
+    b.draw(ctx);
   });
 }
