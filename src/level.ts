@@ -1,3 +1,5 @@
+export const columns = 20;
+
 export const waypoints = [
   {
     x: -154.591202415488,
